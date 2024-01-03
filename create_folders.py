@@ -36,7 +36,6 @@ def format_weekly_folder_name(week, year, detail, detail_position):
         return f"{detail}_{base_name}" if detail_position == "Beginning" else f"{base_name}_{detail}"
     return base_name
 
-
 def setup_monthly_view(root):
     def on_directory_selected():
         if dir_path.get():
@@ -189,6 +188,113 @@ def setup_weekly_view(root):
     clear_button = Button(root, text="Clear", command=clear_entries)
     clear_button.pack()
 
+def setup_miscellaneous_view(root):
+    added_widgets = []
+    static_text_vars = []
+    dynamic_range_vars = []
+    dir_path = StringVar()
+    preview_list = Listbox(root)
+
+    def add_static_field():
+        var = StringVar()
+        static_text_vars.append(var)
+        entry = Entry(root, textvariable=var)
+        entry.pack()
+        added_widgets.append(entry)
+
+    def add_dynamic_field():
+        var = (StringVar(value='1'), StringVar(value='10'))  # Default range 1 to 10
+        dynamic_range_vars.append(var)
+        frame = tk.Frame(root)
+        entry1 = Entry(frame, textvariable=var[0])
+        entry2 = Entry(frame, textvariable=var[1])
+        entry1.pack(side=tk.LEFT)
+        entry2.pack(side=tk.LEFT)
+        frame.pack()
+        added_widgets.extend([frame, entry1, entry2])
+
+    def on_confirm():
+        all_folder_names = generate_folder_names()
+        for name in all_folder_names:
+            path = os.path.join(dir_path.get(), name)
+            os.makedirs(path, exist_ok=True)
+        print(f"Created {len(all_folder_names)} folders in {dir_path.get()}")
+
+    def update_preview():
+        preview_list.delete(0, tk.END)
+        for name in generate_folder_names():
+            preview_list.insert(tk.END, name)
+
+    def generate_folder_names():
+        folder_names = ['']
+
+        for i in range(max(len(static_text_vars), len(dynamic_range_vars))):
+            new_folder_names = []
+
+            if i < len(static_text_vars) and static_text_vars[i].get():
+                for name in folder_names:
+                    new_folder_names.append(f"{name}_{static_text_vars[i].get()}" if name else static_text_vars[i].get())
+
+            if i < len(dynamic_range_vars):
+                dynamic_range = range(int(dynamic_range_vars[i][0].get()), int(dynamic_range_vars[i][1].get()) + 1)
+                temp_folder_names = []
+
+                for name in new_folder_names or folder_names:
+                    for num in dynamic_range:
+                        temp_folder_names.append(f"{name}_{num}" if name else str(num))
+
+                new_folder_names = temp_folder_names
+
+            folder_names = new_folder_names
+
+        return folder_names
+
+    def clear_entries():
+        # Clear the fields
+        for var in static_text_vars:
+            var.set('')
+        for var in dynamic_range_vars:
+            var[0].set('1')
+            var[1].set('10')
+        dir_path.set('')
+        preview_list.delete(0, tk.END)
+
+        # Remove the added widgets
+        for widget in added_widgets:
+            widget.destroy()
+        added_widgets.clear()
+
+    def back_to_main():
+        clear_window(root)
+        show_start_menu(root)
+
+    # GUI setup for Miscellaneous View
+    Label(root, text="Directory:").pack()
+    Entry(root, textvariable=dir_path).pack()
+    Button(root, text="Select Directory", command=lambda: dir_path.set(filedialog.askdirectory())).pack()
+
+    Button(root, text="Add Static Entry", command=add_static_field).pack()
+    Button(root, text="Add Dynamic Entry", command=add_dynamic_field).pack()
+
+    update_button = Button(root, text="Update Preview", command=update_preview)
+    update_button.pack()
+
+    preview_list.pack()
+    confirm_button = Button(root, text="Confirm and Create Folders", command=on_confirm)
+    confirm_button.pack()
+
+    clear_button = Button(root, text="Clear", command=clear_entries)
+    clear_button.pack()
+
+    back_button = Button(root, text="Back", command=back_to_main)
+    back_button.pack(side=tk.TOP, fill=tk.X)
+
+    quit_button = Button(root, text="Quit", command=root.destroy)
+    quit_button.pack()
+
+    Label(root, text="Entries:").pack()
+
+
 def show_start_menu(root):
     def open_monthly_creator():
         clear_window(root)
@@ -198,11 +304,18 @@ def show_start_menu(root):
         clear_window(root)
         setup_weekly_view(root)
 
+    def open_miscellaneous_creator():
+        clear_window(root)
+        setup_miscellaneous_view(root)
+
     monthly_button = Button(root, text="Monthly", command=open_monthly_creator)
     monthly_button.pack()
 
     weekly_button = Button(root, text="Weekly", command=open_weekly_creator)
     weekly_button.pack()
+
+    misc_button = Button(root, text="Miscellaneous", command=open_miscellaneous_creator)
+    misc_button.pack()
 
 def clear_window(window):
     for widget in window.winfo_children():
