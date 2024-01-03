@@ -1,7 +1,7 @@
 ## Folder Creation Tool
 
 ### Overview
-This Python script offers a graphical user interface (GUI) to easily create a sequence of folders within a chosen directory. Users can specify the naming convention based on month range, year, an optional detail, and date format.
+This Python script provides a graphical user interface (GUI) for creating sequences of folders within a selected directory. It now offers two modes: Monthly and Weekly folder creation. Users can specify naming conventions based on date ranges, year, and an optional detail, with flexibility in date formats and detail positioning.
 
 ### Dependencies
 - **Python 3**
@@ -10,43 +10,45 @@ This Python script offers a graphical user interface (GUI) to easily create a se
 
 ### Functions Description
 
-#### `create_folders(directory, start_month, end_month, year, detail, date_format, detail_position)`
-Creates folders in the designated directory.
-- `directory`: The target directory path.
-- `start_month`, `end_month`: Range of months (as integers) for folder naming.
-- `year`: The year to be included in folder names.
-- `detail`: A string for additional detail in the folder name.
-- `date_format`: The format for the date in the folder name. Options: 'MM_YYYY', 'YYYY_MM', 'MMM_YYYY', 'YYYY_MMM'.
-- `detail_position`: Where to place the additional detail ('Beginning' or 'End').
+#### `create_monthly_folders(directory, start_month, end_month, year, detail, date_format, detail_position)`
+Creates monthly folders in the specified directory.
+- Parameters include the directory path, month range, year, detail, date format, and detail position.
 
-#### `format_folder_name(month, year, date_format, detail, detail_position)`
-Formats the folder name according to the specified parameters.
-- Returns: Formatted folder name as a string.
+#### `create_weekly_folders(directory, start_week, end_week, year, detail, detail_position)`
+Creates weekly folders in the specified directory.
+- Parameters include the directory path, week range, year, detail, and detail position.
 
-#### `update_preview(start_month, end_month, detail, preview_list, year, date_format, detail_position)`
-Updates the GUI's preview list to display the folder names based on current inputs.
+#### `format_monthly_folder_name(month, year, date_format, detail, detail_position)`
+Formats the name for monthly folders.
+- Returns the formatted folder name as a string.
 
-### Main Application
-The `main()` function initializes the GUI and handles user interactions.
+#### `format_weekly_folder_name(week, year, detail, detail_position)`
+Formats the name for weekly folders.
+- Returns the formatted folder name as a string.
 
-- **Nested Functions:**
-  - `on_directory_selected()`: Activates buttons upon directory selection.
-  - `on_confirm()`: Generates folders using the given inputs and closes the GUI.
+#### `update_preview(start, end, detail, preview_list, year, date_format/detail_position, is_monthly)`
+Updates the GUI's preview list to display folder names based on current inputs.
+- Can handle both monthly and weekly folder previews.
 
 ### GUI Components
-- **Directory Selection**: Field and button to choose the folder's destination.
-- **Date Inputs**: Dropdowns for selecting the start month, end month, and year.
-- **Date Format**: Dropdown to select the folder name's date format.
-- **Detail Input**: Field for extra details and a dropdown for their position.
-- **Preview Display**: Listbox showcasing the folder names as per current settings.
-- **Action Buttons**: Buttons for updating the preview and confirming folder creation.
+- **Start Menu**: Select between Monthly and Weekly folder creation.
+- **Directory Selection**: Choose the target directory for folder creation.
+- **Date/Week Range Inputs**: Dropdowns for selecting the start and end dates or weeks.
+- **Year Selection**: Dropdown to select the year.
+- **Date Format (Monthly Mode)**: Choose the format for dates in folder names.
+- **Detail Position**: Specify the position of the additional detail (Beginning or End).
+- **Additional Detail Input**: Enter any extra details to include in folder names.
+- **Preview Display**: View how the folder names will appear based on current settings.
+- **Action Buttons**: Update the preview, confirm folder creation, or clear inputs.
+- **Navigation Button**: Return to the main menu or quit the application.
 
 ### Usage Instructions
-1. Execute the script in a Python environment.
-2. Use the GUI to enter the folder creation parameters and select a directory.
-3. Review the folder names in the preview.
-4. Press confirm to create the folders.
+1. Run the script in a Python environment.
+2. From the main menu, choose between Monthly or Weekly folder creation.
+3. Enter the folder creation parameters and select a directory.
+4. Review the folder names in the preview area.
+5. Confirm to create the folders or clear to reset inputs.
 
 ### Important Notes
-- Folders with existing names will not be overwritten due to `os.makedirs` with `exist_ok=True`.
-- The tool offers a convenient, user-friendly method for batch folder creation with custom naming formats.
+- Existing folders with the same names will not be overwritten (uses `os.makedirs` with `exist_ok=True`).
+- Offers a user-friendly interface for batch folder creation with customizable naming formats.
