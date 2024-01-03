@@ -37,7 +37,18 @@ def main():
     def on_confirm():
         create_folders(dir_path.get(), start_month_var.get(), end_month_var.get(), year_var.get(), detail_var.get(), date_format_var.get(), detail_position_var.get())
         print(f"Folders created in {dir_path.get()}")
-        root.destroy()
+
+    def clear_entries():
+        dir_path.set('')
+        start_month_var.set('')
+        end_month_var.set('')
+        year_var.set('')
+        detail_var.set('')
+        date_format_var.set('MM_YYYY')
+        detail_position_var.set('End')
+        preview_list.delete(0, tk.END)
+        update_button.config(state='disabled')
+        confirm_button.config(state='disabled')
 
     dir_path = StringVar()
     start_month_var = StringVar(value='')
@@ -78,7 +89,14 @@ def main():
     confirm_button = Button(root, text="Confirm and Create Folders", command=on_confirm, state='disabled')
     confirm_button.pack()
 
+    clear_button = Button(root, text="Clear", command=clear_entries)
+    clear_button.pack()
+
+    quit_button = Button(root, text="Quit", command=root.destroy)
+    quit_button.pack()
+
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()
