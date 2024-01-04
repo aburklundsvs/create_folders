@@ -195,6 +195,11 @@ def setup_miscellaneous_view(root):
     dir_path = StringVar()
     preview_list = Listbox(root)
 
+    def on_directory_selected():
+        if dir_path.get():
+            update_button.config(state='normal')
+            confirm_button.config(state='normal')
+
     def add_static_field():
         var = StringVar()
         static_text_vars.append(var)
@@ -251,17 +256,16 @@ def setup_miscellaneous_view(root):
 
     def clear_entries():
         # Clear the fields
-        for var in static_text_vars:
-            var.set('')
-        for var in dynamic_range_vars:
-            var[0].set('1')
-            var[1].set('10')
         dir_path.set('')
         preview_list.delete(0, tk.END)
+        static_text_vars.clear()
+        dynamic_range_vars.clear()
 
         # Remove the added widgets
         for widget in added_widgets:
             widget.destroy()
+        static_text_vars.clear()
+        dynamic_range_vars.clear()
         added_widgets.clear()
 
     def back_to_main():
@@ -271,16 +275,17 @@ def setup_miscellaneous_view(root):
     # GUI setup for Miscellaneous View
     Label(root, text="Directory:").pack()
     Entry(root, textvariable=dir_path).pack()
-    Button(root, text="Select Directory", command=lambda: dir_path.set(filedialog.askdirectory())).pack()
+
+    Button(root, text="Select Directory", command=lambda: [dir_path.set(filedialog.askdirectory()), on_directory_selected()]).pack()
 
     Button(root, text="Add Static Entry", command=add_static_field).pack()
     Button(root, text="Add Dynamic Entry", command=add_dynamic_field).pack()
 
-    update_button = Button(root, text="Update Preview", command=update_preview)
+    update_button = Button(root, text="Update Preview", command=update_preview, state='disabled')
     update_button.pack()
 
     preview_list.pack()
-    confirm_button = Button(root, text="Confirm and Create Folders", command=on_confirm)
+    confirm_button = Button(root, text="Confirm and Create Folders", command=on_confirm, state='disabled')
     confirm_button.pack()
 
     clear_button = Button(root, text="Clear", command=clear_entries)
@@ -293,7 +298,6 @@ def setup_miscellaneous_view(root):
     quit_button.pack()
 
     Label(root, text="Entries:").pack()
-
 
 def show_start_menu(root):
     def open_monthly_creator():
@@ -308,13 +312,13 @@ def show_start_menu(root):
         clear_window(root)
         setup_miscellaneous_view(root)
 
-    monthly_button = Button(root, text="Monthly", command=open_monthly_creator)
+    monthly_button = Button(root, text="Monthly Folders", command=open_monthly_creator)
     monthly_button.pack()
 
-    weekly_button = Button(root, text="Weekly", command=open_weekly_creator)
+    weekly_button = Button(root, text="Weekly Folders", command=open_weekly_creator)
     weekly_button.pack()
 
-    misc_button = Button(root, text="Miscellaneous", command=open_miscellaneous_creator)
+    misc_button = Button(root, text="Custom Folders", command=open_miscellaneous_creator)
     misc_button.pack()
 
 def clear_window(window):
