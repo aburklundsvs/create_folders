@@ -72,17 +72,17 @@ This Python script offers a graphical user interface (GUI) for efficiently creat
 **Inputs**:
 1. Static Text Field: "Project"
 2. Dynamic Numeric Range Field: 1-3
-3. Static Text Field: "Week"
+3. Static Text Field: "Week_1"
 
 **Folder Name Generation Process**:
 1. The function first uses the static text "Project" to create an initial set of folder names. Since it's the first input, our initial folder names list is: `["Project"]`.
 2. Next, it appends each number from the dynamic range (1-3) to this name. This process results in: `["Project_1", "Project_2", "Project_3"]`.
-3. Finally, it appends the second static text "Week" to each of these names, resulting in: `["Project_1_Week", "Project_2_Week", "Project_3_Week"]`.
+3. Finally, it appends the second static text "Week_1" to each of these names, resulting in: `["Project_1_Week_1", "Project_2_Week_1", "Project_3_Week_1"]`.
 
 **Final Generated Folder Names**:
-1. "Project_1_Week"
-2. "Project_2_Week"
-3. "Project_3_Week"
+1. "Project_1_Week_1"
+2. "Project_2_Week_1"
+3. "Project_3_Week_1"
 
 ### Example 2: Static, Dynamic, Static, Dynamic Fields
 
